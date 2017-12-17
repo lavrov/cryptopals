@@ -15,33 +15,31 @@ pub fn to_base64(input: &[u8]) -> Vec<u8> {
     loop {
         let output_ref = &mut output;
         match iter.next() {
+            None => break,
             Some(b1) => {
                 let mut index = b1 >> 2;
                 push(output_ref, index);
                 index = (b1 & 0b11) << 4;
                 match iter.next() {
+                    None =>
+                        push(output_ref, index),
                     Some(b2) => {
                         index = index | (b2 >> 4) ;
                         push(output_ref, index);
                         index = (b2 & 0b1111) << 2;
                         match iter.next() {
+                            None =>
+                                push(output_ref, index),
                             Some(b3) => {
                                 index = index | (b3 >> 6);
                                 push(output_ref, index);
                                 index = b3 & 0b111111;
                                 push(output_ref, index);
                             }
-                            None => {
-                                push(output_ref, index);
-                            }
                         }
-                    }
-                    None => {
-                        push(output_ref, index);
                     }
                 }
             }
-            None => break
         }
     };
     output
