@@ -50,44 +50,30 @@ fn push(vec: &mut Vec<u8>, index: u8) {
     vec.push(BASE_64[index as usize]);
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
+#[test]
+fn convert_hex_to_base64() {
+    use convert::hex_to_bytes;
 
-    #[test]
-    fn convert_hex_to_base64() {
-        fn case(hex: &str, base64: &str) {
-            let input: Vec<u8> = hex_to_bytes(hex);
-            let output = to_base64(&input);
-            let output_string = String::from_utf8(output).expect("Not UTF-8");
-            assert_eq!(output_string, base64);
-        }
-
-        case(
-            "49276d206b696c6c696e6720796f757220627261696e206c696b65206120706f69736f6e6f7573206d757368726f6f6d",
-            "SSdtIGtpbGxpbmcgeW91ciBicmFpbiBsaWtlIGEgcG9pc29ub3VzIG11c2hyb29t");
-        case(
-            "aa",
-            "qg"
-        );
-        case(
-            "aabb",
-            "qrs"
-        );
-        case(
-            "aabbcc",
-            "qrvM"
-        );
+    fn case(hex: &str, base64: &str) {
+        let input: Vec<u8> = hex_to_bytes(hex);
+        let output = to_base64(&input);
+        let output_string = String::from_utf8(output).expect("Not UTF-8");
+        assert_eq!(output_string, base64);
     }
 
-
-    fn hex_to_bytes(hex_string: &str) -> Vec<u8> {
-        let input_chars: Vec<_> = hex_string.chars().collect();
-
-        input_chars.chunks(2).map(|chunk| {
-            let first_byte = chunk[0].to_digit(16).unwrap();
-            let second_byte = chunk[1].to_digit(16).unwrap();
-            ((first_byte << 4) | second_byte) as u8
-        }).collect()
-    }
+    case(
+        "49276d206b696c6c696e6720796f757220627261696e206c696b65206120706f69736f6e6f7573206d757368726f6f6d",
+        "SSdtIGtpbGxpbmcgeW91ciBicmFpbiBsaWtlIGEgcG9pc29ub3VzIG11c2hyb29t");
+    case(
+        "aa",
+        "qg"
+    );
+    case(
+        "aabb",
+        "qrs"
+    );
+    case(
+        "aabbcc",
+        "qrvM"
+    );
 }
